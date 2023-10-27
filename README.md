@@ -1,2 +1,2 @@
-# Hoe-X
-Hoe X is a discord bot developed using discord.py. 
+# HoeX
+HoeX is a discord bot developed using discord.py. 
