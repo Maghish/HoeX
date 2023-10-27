@@ -1,5 +1,5 @@
 ---
-name: "\U0001FAB2Bug Fix"
+name: "\U0001FAB2 Bug Fix"
 about: Any bug fix issue
 title: "[\U0001FAB2 Bug Fix]"
 labels: bug
