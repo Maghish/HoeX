@@ -10,6 +10,7 @@ class Remote(commands.Cog):
         self.client = client
         self.update_firebase.start()
 
+    # SHUTDOWN LOG
     async def cog_unload(self):
         self.update_firebase.cancel()
         cursor = DB()
@@ -24,6 +25,7 @@ class Remote(commands.Cog):
         await cursor.update(mode="shop_data")
         print(f"{termcolor.colored((str(datetime.now()))[:-7], 'red', attrs=['dark', 'bold'])} " + info_text + f"{termcolor.colored('Push & Updated', 'magenta')}" + " shop_data (firebase)")
 
+    # PUSH & UPDATE LOG
     @tasks.loop(minutes=10)
     async def update_firebase(self):
         if self.update_firebase.current_loop == 0:
@@ -62,6 +64,7 @@ class Remote(commands.Cog):
         print(f"{termcolor.colored((str(datetime.now()))[:-7], 'green', attrs=['dark', 'bold'])} " + info_text + f"{termcolor.colored('Push & Updated', 'magenta')}" + " shop_data (firebase)")
 
         
+    # FETCH MANUAL COMMAND
     @commands.command()
     @commands.is_owner()
     async def update_temp(self, ctx, mode="all"):

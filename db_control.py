@@ -4,9 +4,11 @@ from firebase_admin import db, credentials
 from fun_config import *
 import os
 
+# Get the path of the credentials.json file
 script_dir = os.path.dirname(os.path.abspath(__file__))
 credentials_path = os.path.join(script_dir, 'credentials.json')
 
+# Initialize
 cred = credentials.Certificate(credentials_path)
 firebase_admin.initialize_app(cred, {"databaseURL": "https://hoex-41b97-default-rtdb.asia-southeast1.firebasedatabase.app/"})
 
@@ -17,6 +19,7 @@ class DB():
     def __init__(self):
         self.db = db
 
+    # Create new nodes in the database
     async def create(self):
         if self.db.reference("/").get() == None:
             self.db.reference("/").update({"inventory": "None"})
@@ -26,7 +29,8 @@ class DB():
             return True
         else:
             return False
-        
+    
+    # Update the firebase database
     async def update(self, mode=("inventory", "farm", "items_data", "shop_data")):
         if mode == "inventory":
             users = await get_inventory_data()
@@ -45,9 +49,11 @@ class DB():
         except:
             self.db.reference(f"/{mode}").set(users)
 
+    # Fetch data from the database
     async def retrieve(self, mode=("inventory", "farm", "items_data", "shop_data")):
         return self.db.reference(f"/{mode}").get()
     
+    # Fetch data from the database and update the local json files
     async def update_json(self, mode=("inventory", "farm", "items_data", "shop_data")):
         if mode == "inventory":
             users = self.db.reference("/inventory").get()
