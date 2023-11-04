@@ -42,7 +42,7 @@ class Inventory(commands.Cog):
         else:
             # If not, send an alert indicating that
             await ctx.reply("You have to start first! Use `x start`")    
-    
 
+    
 async def setup(client: commands.Bot) -> None:
     await client.add_cog(Inventory(client))
