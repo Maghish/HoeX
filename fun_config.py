@@ -32,11 +32,14 @@ async def create_inventory(user):
         data[str(user.id)] = {}
         data[str(user.id)]["Stats"] = {
             "Health": 100,
+            "MaxHealth": 100,
             "Energy": 200,
+            "MaxEnergy": 200,
             "Farming": 0,
             "Fishing": 0, 
             "Mining": 0,
             "Animals": 0,
+            "Combat": 0,
         }
         data[str(user.id)]["Inventory"] = []
 
@@ -44,3 +47,12 @@ async def create_inventory(user):
         json.dump(data, json_file, indent=1)
     return True
 
+async def make_bar(subset: int, superset: int, set1_color: str, set2_color: str):
+    dash_convert = int(superset/10)
+    current_dashes = int(subset/dash_convert)
+    remaining_max_value = 10 - current_dashes
+
+    current_value_display = set1_color * current_dashes
+    remaining_max_value_display = set2_color * remaining_max_value
+
+    return ("|" + current_value_display + remaining_max_value_display + "|" + " " + f"{subset}/{superset}")
