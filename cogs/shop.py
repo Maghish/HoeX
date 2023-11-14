@@ -19,6 +19,15 @@ class Shop(commands.Cog):
 
 
 
+    @commands.command()
+    async def buy(self, ctx, shop_index: int, item_index: int, item_amount: int):
+        res = await buy(ctx.author, shop_index, item_index, item_amount)
+
+
+        
+
+
+
 async def setup(client:commands.Bot) -> None:
     await client.add_cog(Shop(client))
 

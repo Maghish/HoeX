@@ -41,7 +41,34 @@ class Inventory(commands.Cog):
             await ctx.reply(embed=embed)
         else:
             # If not, send an alert indicating that
-            await ctx.reply("You have to start first! Use `x start`")    
+            await ctx.reply("You have to start first! Use `x start`")   
+
+    @commands.command(aliases=["bal"])
+    async def balance(self, ctx, user: discord.Member = None):
+        # If the user didn't specify the user
+        if user == None:
+            # Then the user must be wanting to view their balance, so the user is the ctx.author 
+            user = ctx.author
+        
+        # Create the embed
+        embed = discord.Embed(
+            title=f"{user.global_name}'s Balance",
+            description="This is your balance! To deposit money from your wallet to bank use `x deposit [amount]` and use `x withdraw [amount]` to withdraw money from your bank to wallet",
+            color=0x7F4E4E,
+            timestamp= datetime.utcnow()
+        )
+
+    
+        # Get the inventory data as users
+        users = await get_inventory_data()
+        
+        embed.add_field(name="Wallet 👜", value=f'💵 {int(users[str(user.id)]["Money"]["Wallet"]):,}', inline= True)
+        embed.add_field(name="Bank 💳", value=f'💵 {int(users[str(user.id)]["Money"]["Bank"]):,}', inline= True)
+        embed.set_footer(text=f"Requested by {ctx.author.global_name}", icon_url=ctx.author.display_avatar)
+
+        # Send the embed
+        await ctx.send(embed=embed)
+
 
     
 async def setup(client: commands.Bot) -> None:

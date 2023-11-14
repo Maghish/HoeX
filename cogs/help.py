@@ -25,7 +25,6 @@ class HelpCog(commands.Cog):
                 time_str = time_str[2:]
             await message.send(f"Command on cooldown! Please try after {time_str}")
         else:
-            print(error)
             await message.send("Unexpected error occurred, Please try again later!")
             raise error
 
