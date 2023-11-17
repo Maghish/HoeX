@@ -56,8 +56,17 @@ async def create_inventory(user):
         json.dump(data, json_file, indent=1)
     return True
 
-async def update_money(user, amount: int, mode=["Wallet", "Bank"]):
-    ...
+async def update_money(user, amount: int = 0, mode=["Wallet", "Bank"]):
+    
+    # Get the inventory data as users
+    users = await get_inventory_data()
+
+    # Add the value in respective mode
+    users[str(user.id)]["Money"][mode] += amount
+
+    # Save the changes
+    with open(inventory_json_file, "w") as json_file:
+        json.dump(users, json_file, indent=1) 
 
 async def make_bar(subset: int, superset: int, set1_color: str, set2_color: str):
     dash_convert = int(superset/10)

@@ -43,6 +43,12 @@ class Inventory(commands.Cog):
             # If not, send an alert indicating that
             await ctx.reply("You have to start first! Use `x start`")   
 
+
+class Economy(commands.Cog):
+
+    def __init__(self, client: commands.Bot):
+        self.client = client
+
     @commands.command(aliases=["bal"])
     async def balance(self, ctx, user: discord.Member = None):
         # If the user didn't specify the user
@@ -69,7 +75,40 @@ class Inventory(commands.Cog):
         # Send the embed
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def deposit(self, ctx, amount: int):    
+        # Get the inventory data as users
+        users = await get_inventory_data()
 
-    
+        # Check if the user has that much money in their wallet
+        if int(users[str(ctx.author.id)]["Money"]["Wallet"]) >= amount:
+            # Then subtract the amount from the wallet 
+            await update_money(ctx.author, -1*amount, "Wallet")
+            # Then add the amount to the bank
+            await update_money(ctx.author, amount, "Bank")
+            # Send the response
+            await ctx.reply(f"Successfully deposited 💵 {amount} to Bank")
+        else:
+            # Send the response
+            await ctx.reply("You don't have that much money!")
+
+    @commands.command()
+    async def withdraw(self, ctx, amount: int):    
+        # Get the inventory data as users
+        users = await get_inventory_data()
+
+        # Check if the user has that much money in their bank
+        if int(users[str(ctx.author.id)]["Money"]["Bank"]) >= amount:
+            # Then subtract the amount from the bank
+            await update_money(ctx.author, -1*amount, "Bank")
+            # Then add the amount to the wallet
+            await update_money(ctx.author, amount, "Wallet")
+            # Send the response
+            await ctx.reply(f"Successfully withdrawed 💵 {amount} from Bank")
+        else:
+            # Send the response
+            await ctx.reply("You don't have that much money!")
+
 async def setup(client: commands.Bot) -> None:
     await client.add_cog(Inventory(client))
+    await client.add_cog(Economy(client))
