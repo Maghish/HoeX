@@ -85,21 +85,26 @@ async def buy(user, shop_index: int, item_index: int, item_amount: int):
         # Load the data of the json file
         data = json.load(json_file)
         
+    t1 = None # Delcare this to track if the shop exists 
+    t2 = None # Delcare this to track if the item exists in the shop data
     # Declare a variable to track the current index
     index = 1
     # Iterate over the data
     for shop in data:
         # If the given argument shop_index and the current index are same
         if index == shop_index: # We make this condition to find the shop through it's index
+            shop_name = shop["shop_name"] # Declare this variable to store the name of the shop
             # Then declare another variable to track the current index within the loop itself 
             index = 1
-            # After that iterate over the shop's items
+            t1 = 1 # Set the t1 to 1 for indicating that the shop exists
+            # After that iterate over the shop's item 
             for thing in shop["items"]: 
                 # If the given argument item_index and the current index are same 
                 if index == item_index: # We again do this condition, this time to find the item thorugh it's index 
                     # Then declare a variable for storing the name of the item and the price of the item 
                     item_name = thing["item_name"]
                     item_price = thing["item_price"]
+                    t2 = 1 # Set the t2 to 1 for indicating that the item is found
                     break
                 else:
                     # Else increase the index by one
@@ -110,14 +115,24 @@ async def buy(user, shop_index: int, item_index: int, item_amount: int):
             index += 1
             continue
 
+    # Check if the t1 is still None
+    if t1 is None:
+        # If none, then it means that there is no shop in that index
+        return [False, 1]
+    
+    # Check if the t2 is still None
+    if t2 is None:
+        # if still none, then it means that there is no such item in that shop
+        return [False, 2]
+
     # Get the inventory data as users
     users = await get_inventory_data()
     # Check if the user has enough money to buy this item
     if users[str(user.id)]["Money"]["Wallet"] >= int(item_price*item_amount):
         pass
     else:
-        # If not return False and 2 to indicate that the user does not have enough money
-        return [False, 2]
+        # If not return False and 3 to indicate that the user does not have enough money
+        return [False, 3]
 
 
     # Open the items data json file        
@@ -167,4 +182,4 @@ async def buy(user, shop_index: int, item_index: int, item_amount: int):
     await update_money(user, int(item_price*item_amount)*-1,"Wallet")
 
     # Return True
-    return [True,item_name]
+    return [True, item_name, item_amount, shop_name]
