@@ -106,7 +106,7 @@ class Shop():
             content = res[0]
             index = int(res[1] + 1)
             for shop in content:
-                embed.add_field(name=f"[{index}] {shop['name']}", value=f"{shop['description']}", inline=False)
+                embed.add_field(name=f"[{index}] {shop['shop_name']}", value=f"{shop['description']}", inline=False)
                 index += 1
 
             embed.set_footer(icon_url=(self.user.display_avatar), text= f"For {self.user.global_name} <Page {self.outer_instance.current_page} of {self.outer_instance.total_pages}>")
